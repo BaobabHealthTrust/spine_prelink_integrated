@@ -1,0 +1,29 @@
+<script type="text/javascript" language="javascript">
+  <!--
+  tt_cancel_show = "/lab/show/<%= @patient_id %>";
+  tt_cancel_destination = "/lab/show/<%= @patient_id %>";
+  //-->
+</script>
+
+<%#= form_tag(:action => "check_result_by_date") do |f| %>
+<form action="/lab/check_result_by_date" method='post'>
+  
+  <%= hidden_field_tag "patient_id", "#{@patient_id}" %>
+
+  <%= text_field_tag "StartDate", nil,
+    {
+    :helptext => "Search Start Date",
+    :field_type => 'date'
+  }
+%>
+
+  <%= text_field_tag "EndDate", nil,
+    {
+    :helptext => "Search End Date",
+    :field_type => 'date'
+  }
+%>
+
+</form>
+
+<%# end %>

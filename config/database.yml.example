@@ -1,0 +1,30 @@
+# production:
+#   adapter: mysql
+#   database: openmrs
+#   username: root
+#   password:
+#   host: localhost
+
+development:
+  adapter: mysql
+  #database: openmrs_development
+  database: mateme_development
+  username: root
+  password:
+  host: localhost
+
+test:
+  adapter: mysql
+  database: openmrs_test
+  username: root
+  password: 
+  host: localhost
+
+prelink_gateway:
+  adapter: mysql
+  database: prelink_gateway
+  username: root
+  password: 
+  host: localhost
+
+

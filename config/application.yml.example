@@ -1,0 +1,11 @@
+production:
+  prelink_url: localhost:3007
+ 
+development:
+  prelink_url: localhost:3007
+ 
+test: &TEST
+  prelink_url: localhost:3007
+
+cucumber:
+  <<: *TEST

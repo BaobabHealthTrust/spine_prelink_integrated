@@ -1,0 +1,5 @@
+## Credentials for PreLink Web Service.
+---
+wsdl_url: 'http://41.77.12.32/clinicservice.asmx?WSDL'
+station_id: 
+pass_code: 

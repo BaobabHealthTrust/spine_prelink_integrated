@@ -1,0 +1,64 @@
+<script type="text/javascript" language="javascript">
+  <!--
+  tt_cancel_show = "/show/<%= @patient.id %>";
+  tt_cancel_destination = "/show/<%= @patient.id %>";
+  //-->
+</script>
+
+<%= form_tag(:action => "place_order") do %>
+
+  <%= hidden_field_tag "FirstName", "#{@first_name}" %>
+  <%= hidden_field_tag "LastName", "#{@last_name}" %>
+  <%= hidden_field_tag "NationalId", "#{@national_id}" %>
+  <%= hidden_field_tag "Age", "#{@age}" %>
+  <%= hidden_field_tag "Dob", "#{@dob}" %>
+  <%= hidden_field_tag "Gender", "#{@gender}" %>
+  <%= hidden_field_tag "PatientId", "#{@patient.id}" %>
+
+  <%#= select_tag "PriorityCode",
+    options_for_select([["", ""], ["QC", "Q"], ["Routine", "R"], ["Urgent", "U"]]),
+    {
+    :helptext => "Select tests priority",
+    :nested => :true
+  }
+%>
+
+  <%#= text_field_tag "DateCollected", nil,
+    {
+    :helptext => "Date sample collected",
+    :field_type => 'date'
+  }
+%>
+
+  <%#= text_field_tag "DateReceived", nil,
+    {
+    :helptext => "Date sample received at facility",
+    :field_type => 'date'
+  }
+%>
+
+  <%#= hidden_field_tag "FolioNumber", nil,
+    {
+    :helptext => "Folio Number",
+    :optional => true
+  }
+%>
+
+  <%#= hidden_field_tag "DoctorLocationCode", nil,
+    {
+    :helptext => "Doctor Location Code",
+    :optional => true
+  }
+%>
+
+  <%= select_tag "TestCodes[]",
+    grouped_options_for_select(@codes),
+    {
+    :helptext => "Select tests to be done",
+    :multiple => :multiple,
+    :nested => :true
+  }
+%>
+
+
+<% end %>

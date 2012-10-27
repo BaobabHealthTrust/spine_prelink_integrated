@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Current Orders</title>
+    <style type="text/css">
+      body {
+        font-family: "Nimbus Sans L","Arial Narrow",sans-serif;
+      }
+    </style>
+    <script type="text/javascript" language="javascript">
+      <!--
+      
+      function extAction(id, path){
+        
+        confirmAction("Do you really want to delete this entry?", id, path);
+
+      }
+
+      function confirmAction(message, path) {
+        if (!tstMessageBar) {
+
+          var tstMessageBar = document.createElement("div");
+          tstMessageBar.id = "messageBar";
+          tstMessageBar.className = "messageBar";
+
+          tstMessageBar.innerHTML = message + "<br/>" + "<button onmousedown=\"window.parent.location='" + path +
+            "'\"><span>Yes</span></button><button onmousedown=\"document.getElementById('content').removeChild(document.getElementById('messageBar'));\"><span>No</span></button>";
+
+          tstMessageBar.style.display = "block";
+          parent.document.getElementById("content").appendChild(tstMessageBar);
+        }
+
+        return false;
+
+      }
+
+      //-->
+    </script>
+  </head>
+  <body>
+    <table width="100%" cellpadding="10" cellspacing="1" style="border-left: 1px solid #6281A7;">
+      <tr style="font-size: 14px; background-color: #6281A7; color: #fff; font-weight: bold;">
+
+        <% @fields.each do |field| %>
+
+          <td style="text-align: center; vertical-align: top;">
+            <%= field.gsub(/timestamp/, "Date Retrieved").gsub(/_/," ").titleize rescue "" %>
+          </td>
+
+        <% end %>
+
+      </tr>
+
+      <% @orders.each do |order| %>
+
+        <tr>
+          <% @fields.each do |field| %>
+
+            <td style="border-right: 1px solid #6281A7; border-bottom: 1px solid #6281A7; vertical-align: top;">
+              <%= order[1][field] %>&nbsp;
+            </td>
+
+          <% end %>
+
+        </tr>
+
+      <% end %>
+
+    </table>
+  </body>
+</html>

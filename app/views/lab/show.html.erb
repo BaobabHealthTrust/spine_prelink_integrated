@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>Patient Dashboard</title>
+    <script type="text/javascript" language="javascript" src="lib/javascripts/touchScreenToolkit.js" defer  ></script>
+    <meta http-equiv='content-type' content='text/html;charset=UTF-8' />
+    <script language="javascript">
+      tt_cancel_destination = "/patients/show/<%= @patient.id %>";
+      tt_cancel_show = "/patients/show/<%= @patient.id %>";
+
+    </script>
+    <style type="text/css">
+      #buttonlinks {
+        padding-top: 15px;
+        text-align: center;
+      }
+
+      #newLabOrder {
+        color: #fff;
+        padding: 10px;
+        height: 210px;
+        width: 90%;
+        -moz-transition: none 0s ease 0s;
+        border: 0 none;
+        border-radius: 6px 6px 6px 6px;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px 5px rgba(0, 0, 0, 0.25);
+        color: #FFFFFF;
+        font-size: 24px;
+        font-weight: 200;
+        padding: 14px 24px;
+        background-color: #006DCC;
+        background-image: -moz-linear-gradient(center top , #0088CC, #0044CC);
+        background-repeat: repeat-x;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+      }
+
+      #newLabOrder:hover {
+        color: #ffffff;
+        background-color: #222222;
+        *background-color: #151515;
+      }
+
+    </style>
+  </head>
+  <body><div id='content'>
+      <div id='description' style='color:#777;position:absolute;margin-top:-70px;'></div><center>
+        <form id = 'dashboard' action='home.html'>
+          <div>Patient Dashboard</div>
+          <div id='project_name'>
+            <div style="margin-top: 0px; color: #6281A7; font-size: 0.8em">
+              <!--spine -->
+              <img src="/assets/spine_logo.png" alt="spine" style="margin-top: 10px;
+                   margin-bottom: 10px;" />
+              <div style="font-size: 0.3em;">
+                <span style="color: #a8ed7a;">preLink</span> gateway
+              </div>
+            </div>
+          </div>
+          <span id='patient_name'><%= @name %></span>
+          <span id='patient_id'><%= @national_id %></span>
+          <!--span id='patient_residence'>18/1453</span-->
+          <span id='patient_age'><%= @age %></span>
+          <span id='patient_gender'><%= (@gender.upcase == "F" ? "Female" :
+                (@gender.upcase == "M" ? "Male" : "")) %></span>
+          <select id="tabs">
+            <option value='/lab/overview/<%= @patient.id %>'>Current Lab Results</option>
+            <option value='/lab/orders/<%= @patient.id %>'>Historical Lab Results</option>
+            <!--option value='/show/results/<%#= @patient.id %>'>Lab Results</option-->
+          </select>
+          <select id="links">
+            <!--option></option>
+            <option></option-->
+            <option value='/lab/check_by_date/<%= @patient.id %>'>Check Results</option>
+            <!--option></option-->
+          </select>
+          <input type='submit' value='Finish' />
+        </form>
+      </center>
+    </div>
+    <script type="text/javascript" language="javascript">
+      <!--
+
+      function changeButton(){
+        try{
+          var btn = document.createElement("input");
+          btn.type = "button";
+          btn.id = "newLabOrder";
+        
+          var control = document.getElementById("buttonlinks").getElementsByTagName("button")[0];
+
+          btn.setAttribute("link", control.getAttribute("link"));
+        
+          btn.onclick = control.onclick;
+
+          btn.value = "Check\nResults";
+
+          control.style.display = "none";
+
+          document.getElementById("buttonlinks").appendChild(btn);
+
+          if(!document.getElementById("newLabOrder")){
+            setTimeout("changeButton()", 50);
+          }
+        } catch(e){
+          setTimeout("changeButton()", 50);
+        }
+      }
+
+      setTimeout("changeButton()", 500);
+
+      //-->
+    </script>
+  </body>
+</html>
