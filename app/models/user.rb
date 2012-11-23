@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   end
   
   def admin?
-    user_roles.map{|user_role| user_role.role }.include? 'Informatics Manager'
+    user_roles.map{|user_role| user_role.role.downcase }.include? 'informatics manager' || 'program manager'
   end  
       
   # Encrypts plain data with the salt.
@@ -169,7 +169,7 @@ class User < ActiveRecord::Base
   end
 
   def superuser?
-    user_roles.map{|user_role| user_role.role }.include? 'superuser'
+    user_roles.map{|user_role| user_role.role.downcase }.include? 'superuser'
   end  
 
 

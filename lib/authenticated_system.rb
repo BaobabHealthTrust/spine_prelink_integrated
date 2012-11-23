@@ -11,6 +11,7 @@ module AuthenticatedSystem
     def current_user
       @current_user ||= (login_from_session || login_from_basic_auth) unless @current_user == false
       User.current_user = @current_user unless @current_user == false
+
       @current_user
     end
 
