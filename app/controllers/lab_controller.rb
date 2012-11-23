@@ -218,6 +218,7 @@ class LabController < ApplicationController
 
     @orders = {}
 
+=begin
     mapping = {"08B"=>"Albumin", "35A"=>"Alkaline Phosphatase", "31A"=>"ALT",
       "30A"=>"AST", "BA#"=>"Basophils#", "BA%"=>"Basophils%",
       "12A"=>"Bilirubin Direct", "11A"=>"Bilirubin Total", "44A"=>"Cholesterol",
@@ -231,6 +232,13 @@ class LabController < ApplicationController
       "PLT"=>"Platelets", "01B"=>"Potassium", "07A"=>"Protein Pleural", "RDW"=>"RDW",
       "RBC"=>"Red Cell Count", "RET%"=>"Retic", "TIBC"=>"TIBC", "TPPA"=>"TPPA FUJIREBIO",
       "42B"=>"Triglycerides", "UREA"=>"Urea", "08M"=>"Urine albumin", "WBC"=>"WCC "}
+=end
+
+    mapping = {}
+
+    TestCode.all.each do |code|
+      mapping[code.test_code] = code.test_name if !code.test_code.blank?
+    end
 
     @labs.each do |lab|
 
@@ -269,6 +277,7 @@ class LabController < ApplicationController
 
     @orders = {}
 
+=begin
     mapping = {"08B"=>"Albumin", "35A"=>"Alkaline Phosphatase", "31A"=>"ALT",
       "30A"=>"AST", "BA#"=>"Basophils#", "BA%"=>"Basophils%",
       "12A"=>"Bilirubin Direct", "11A"=>"Bilirubin Total", "44A"=>"Cholesterol",
@@ -282,6 +291,13 @@ class LabController < ApplicationController
       "PLT"=>"Platelets", "01B"=>"Potassium", "07A"=>"Protein Pleural", "RDW"=>"RDW",
       "RBC"=>"Red Cell Count", "RET%"=>"Retic", "TIBC"=>"TIBC", "TPPA"=>"TPPA FUJIREBIO",
       "42B"=>"Triglycerides", "UREA"=>"Urea", "08M"=>"Urine albumin", "WBC"=>"WCC "}
+=end
+
+    mapping = {}
+
+    TestCode.all.each do |code|
+      mapping[code.test_code] = code.test_name if !code.test_code.blank?
+    end
 
     @labs.each do |lab|
 
