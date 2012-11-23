@@ -1,11 +1,11 @@
 production:
-  run_local: true
+  run_local: false
   order_prefix: SPN
- 
+
 development:
-  run_local: true
+  run_local: false
   order_prefix: SPN
- 
+
 test: &TEST
   run_local: true
   order_prefix: SPN

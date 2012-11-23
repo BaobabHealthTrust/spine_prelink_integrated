@@ -1,5 +1,3 @@
-require 'pre_link_service'
-
 class LabController < ApplicationController
   before_filter :prelink_connect, :except => [:void]
 
@@ -240,7 +238,7 @@ class LabController < ApplicationController
 
         @orders[lab.lab_result_id] = {
           "request_number" => "#{lab.request_number}",
-          "test_code" => "#{mapping[lab.test_code]}",
+          "test_code" => "#{(mapping[lab.test_code].blank? ? lab.test_code : mapping[lab.test_code])}",
           "timestamp" => "#{lab.timestamp}"
         }
 
@@ -291,7 +289,7 @@ class LabController < ApplicationController
 
         @orders[lab.lab_result_id] = {
           "request_number" => "#{lab.request_number}",
-          "test_code" => "#{mapping[lab.test_code]}",
+          "test_code" => "#{(mapping[lab.test_code].blank? ? lab.test_code : mapping[lab.test_code])}",
           "timestamp" => "#{lab.timestamp}"
         }
 
@@ -371,6 +369,8 @@ class LabController < ApplicationController
     results = @prelink.get_new_results rescue nil
     # [{:patient_id=>nil, :request_number=>"SPN96", :result=>"Positive", :test_unit=>"Mg/l", :test_range=>"0-9", :colour=>"Red", :"@diffgr:id"=>"Result1", :"@msdata:row_order"=>"0"}, {
 
+    # raise results.inspect
+    
     if !results.nil?
 
       if results.class.to_s.upcase == "ARRAY"
@@ -408,7 +408,7 @@ class LabController < ApplicationController
                       :voided => 0
                     }
                   ) if key != :request_number && key != :clinic_patient_id &&
-                    !key.to_s.match(/@/) && key != :test_code
+                    !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
                 end
 
@@ -428,7 +428,7 @@ class LabController < ApplicationController
                       :voided => 0
                     }
                   ) if key != :request_number && key != :clinic_patient_id &&
-                    !key.to_s.match(/@/) && key != :test_code
+                    !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
                 end
 
@@ -475,7 +475,7 @@ class LabController < ApplicationController
                     :voided => 0
                   }
                 ) if key != :request_number && key != :clinic_patient_id &&
-                  !key.to_s.match(/@/) && key != :test_code
+                  !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
               end
 
@@ -495,7 +495,7 @@ class LabController < ApplicationController
                     :voided => 0
                   }
                 ) if key != :request_number && key != :clinic_patient_id &&
-                  !key.to_s.match(/@/) && key != :test_code
+                  !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
               end
 
@@ -539,22 +539,23 @@ class LabController < ApplicationController
         :start_date => start_date, :end_date => end_date}) rescue nil
 
     @patient_id = params["patient_id"]
+
     if !results.nil?
 
       if results.class.to_s.upcase == "ARRAY"
 
         results.each do |result|
 
-          if !result[:clinic_patient_id].nil? && result.keys.include?(:test_code)
+          if result.keys.include?(:test_code)
 
-            id = Person.search_by_identifier(result[:clinic_patient_id]).first.id rescue nil
+            id = @patient_id rescue nil
 
             if !id.nil?
 
               previous_order = LabResult.find_by_request_number(result[:request_number],
                 :conditions => ["test_code = ?", result[:test_code]])
 
-              if previous_order.nil?
+              if previous_order.blank?
 
                 order = LabResult.create(
                   {
@@ -571,12 +572,12 @@ class LabController < ApplicationController
                   LabResultDetails.create(
                     {
                       :lab_result_id => order.id,
-                      :field_name => key,
+                      :field_name => key.to_s,
                       :field_value => value,
                       :voided => 0
                     }
                   ) if key != :request_number && key != :clinic_patient_id &&
-                    !key.to_s.match(/@/) && key != :test_code
+                    !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
                 end
 
@@ -591,12 +592,12 @@ class LabController < ApplicationController
                   LabResultDetails.create(
                     {
                       :lab_result_id => previous_order.id,
-                      :field_name => key,
+                      :field_name => key.to_s,
                       :field_value => value,
                       :voided => 0
                     }
                   ) if key != :request_number && key != :clinic_patient_id &&
-                    !key.to_s.match(/@/) && key != :test_code
+                    !key.to_s.match(/@/) && key != :test_code && value.class.to_s.upcase != "HASH"
 
                 end
 

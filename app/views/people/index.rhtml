@@ -53,13 +53,13 @@
     <%end%>
     <br />
     
-    <%# if @super_user%>
+    <% if @super_user%>
       <!--button id="find_lab_entries_button" class="button green" style="min-width:515px;" onclick="window.location = '/encounters/lab_results_entry'" style="min-width:480px;">
             <span>Lab Results Entry</span>
-          </button><br />
+          </button><br /-->
 
-      <button id="admin_button" class="button green" style="min-width:515px;" onclick="window.location = '/admin'"><span>Administration</span></button-->
-    <%#end%>
+      <button id="admin_button" class="button green" style="min-width:515px;" onclick="window.location = '/admin'"><span>Administration</span></button>
+    <%end%>
     
     <%#if @spine_clinician %> <%#|| @super_user%>
       <!--button id="find_lab_entries_button" class="button green" style="min-width:515px;" onclick="window.location = '/encounters/lab_results_entry'" style="min-width:500px;">

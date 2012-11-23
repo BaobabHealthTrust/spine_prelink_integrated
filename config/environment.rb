@@ -28,6 +28,7 @@ require 'json'
 require 'colorfy_strings'
 require 'mechanize'
 require 'savon'
+require 'pre_link_service'
 
 # Foreign key checks use a lot of resources but are useful during development
 module ActiveRecord
@@ -48,14 +49,16 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'concept_class', 'concept_class'
 end  
 
+if false
+  
+  #Setup autossh tunnels to demographic servers
+  remote_user = GlobalProperty.find_by_property("demographic_server_user").property_value rescue 'unknown'
+  JSON.parse(GlobalProperty.find_by_property("demographic_server_ips_and_local_port").property_value).each{|demographic_server, local_port|
+    # Use ssh-copy-id for passing keys around during setup
+    command_for_starting_autossh = "autossh -L #{local_port}:localhost:80 #{remote_user}@#{demographic_server} -N -oPasswordAuthentication=no"
+    (pid = fork) ? Process.detach(pid) : exec(command_for_starting_autossh)
+  } rescue nil
 
-#Setup autossh tunnels to demographic servers
-remote_user = GlobalProperty.find_by_property("demographic_server_user").property_value rescue 'unknown'
-JSON.parse(GlobalProperty.find_by_property("demographic_server_ips_and_local_port").property_value).each{|demographic_server, local_port|
-  # Use ssh-copy-id for passing keys around during setup
-  command_for_starting_autossh = "autossh -L #{local_port}:localhost:80 #{remote_user}@#{demographic_server} -N -oPasswordAuthentication=no"
-  (pid = fork) ? Process.detach(pid) : exec(command_for_starting_autossh)
-} rescue nil
-
+end
 
 
