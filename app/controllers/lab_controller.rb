@@ -561,7 +561,7 @@ class LabController < ApplicationController
                 order = LabResult.create(
                   {
                     :patient_id => id,
-                    :national_id => result[:clinic_patient_id],
+                    :national_id => national_id,
                     :request_number => result[:request_number],
                     :test_code => result[:test_code],
                     :voided => 0
@@ -628,7 +628,7 @@ class LabController < ApplicationController
               order = LabResult.create(
                 {
                   :patient_id => id,
-                  :national_id => results[:clinic_patient_id],
+                  :national_id => national_id,
                   :request_number => results[:request_number],
                   :test_code => results[:test_code],
                   :voided => 0
