@@ -525,6 +525,7 @@ class LabController < ApplicationController
   end
 
   def check_result_by_date
+    
     s_d = params["StartDate"].split("-")
     start_date = s_d[2] + s_d[1] + s_d[0]
 

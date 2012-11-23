@@ -70,8 +70,14 @@
           <select id="links">
             <!--option></option>
             <option></option-->
-            <option value='/lab/check_by_date/<%= @patient.id %>'>Check Results</option>
+            <option value='/lab/check_by_date/<%= @patient.id %>'>Check Results By Date</option>
             <!--option></option-->
+          </select>
+          <select id="navigation_links">
+              <option link='/lab/check_result_by_date?patient_id=<%= @patient.id 
+                  %>&StartDate=<%= (Date.today - 3.months).strftime("%Y-%m-%d") %>&EndDate=<%= Date.today.strftime("%Y-%m-%d") %>'>
+                Check Results
+              </option>
           </select>
           <input type='submit' value='Finish' />
         </form>
@@ -92,7 +98,7 @@
         
           btn.onclick = control.onclick;
 
-          btn.value = "Check\nResults";
+          btn.value = "Check\nResults\nBy Date";
 
           control.style.display = "none";
 
