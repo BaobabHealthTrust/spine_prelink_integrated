@@ -3,7 +3,7 @@
 require "rubygems"
 require "rest-client"
 
-url = "http://localhost:3004/lab/query"
+url = "http://appserver/lab/query"
 
 p = RestClient.get(url)
 
