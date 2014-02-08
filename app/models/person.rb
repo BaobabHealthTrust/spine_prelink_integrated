@@ -307,10 +307,10 @@ class Person < ActiveRecord::Base
         self.set_birthdate(p, birthday_params["birth_year"], birthday_params["birth_month"], birthday_params["birth_day"])
 		  end
 		end
+    
+    p.gender = person_params["gender"]
 		p.save
 	   
-    pp =  p.save
-
 		p.names.create(names_params)
 		p.addresses.create(address_params) unless address_params.empty? rescue nil
     
