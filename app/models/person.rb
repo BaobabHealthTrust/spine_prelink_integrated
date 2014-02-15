@@ -1,16 +1,17 @@
 class Person < ActiveRecord::Base
   set_table_name "person"
   set_primary_key "person_id"
+  require 'json'
+	require 'rest_client'                                                           
+
 
   include Openmrs
-
+ 
   has_one :patient, :foreign_key => :patient_id, :dependent => :destroy
   has_many :names, :class_name => 'PersonName', :foreign_key => :person_id, :dependent => :destroy, :conditions => 'person_name.voided = 0', :order => 'person_name.preferred DESC'
   has_many :addresses, :class_name => 'PersonAddress', :foreign_key => :person_id, :dependent => :destroy, :conditions => 'person_address.voided = 0', :order => 'person_address.preferred DESC'
   has_many :person_attributes, :foreign_key => :person_id, :dependent => :destroy, :conditions => 'person_name.voided = 0'
   has_many :observations, :class_name => 'Observation', :foreign_key => :person_id, :dependent => :destroy, :conditions => 'obs.voided = 0' do
-
-
 
     def find_by_concept_name(name)
       concept_name = ConceptName.find_by_name(name)
@@ -398,7 +399,7 @@ class Person < ActiveRecord::Base
   # use the autossh tunnels setup in environment.rb to query the demographics servers
   # then pull down the demographics
   def self.find_remote(known_demographics)
-
+=begin
     # known_demographics.merge!({"_method"=>"put"}) #This is probably necessary when querrying a mateme demographics server
     # Some strange parsing to get the params formatted right for mechanize
     demographics_params = CGI.unescape(known_demographics.to_param).split('&').map{|elem| elem.split('=')}
@@ -428,16 +429,57 @@ class Person < ActiveRecord::Base
     }.sort{|a,b|b.length <=> a.length}.first
 
     result ? JSON.parse(result) : nil
-
-  end
+=end 
   
+    
+    servers = GlobalProperty.find(:first, :conditions => {:property => "remote_servers.parent"}).property_value.split(/,/) rescue nil
+    server_address_and_port = servers.to_s.split(':')
+    server_address = server_address_and_port.first
+    server_port = server_address_and_port.second
+
+    return nil if servers.blank?
+
+    # use ssh to establish a secure connection then query the localhost
+    # use wget to login (using cookies and sessions) and set the location
+    # then pull down the demographics
+    # TODO fix login/pass and location with something better
+
+    login = GlobalProperty.find(:first, :conditions => {:property => "remote_bart.username"}).property_value.split(/,/) rescue ""
+    password = GlobalProperty.find(:first, :conditions => {:property => "remote_bart.password"}).property_value.split(/,/) rescue ""
+
+    # TODO need better logic here to select the best result or merge them
+    # Currently returning the longest result - assuming that it has the most information
+    # Can't return multiple results because there will be redundant data from sites
+
+    if server_port.blank?
+      uri = "http://#{login.first}:#{password.first}@#{server_address}/people/demographics_remote"                          
+    else
+      uri = "http://#{login.first}:#{password.first}@#{server_address}:#{server_port}/people/demographics_remote"                          
+    end
+    
+
+    begin
+      output = RestClient.post(uri,known_demographics)     
+    	results = []
+    	results.push output if output and output.match(/person/)
+    	result = results.sort{|a,b|b.length <=> a.length}.first
+    	result ? person = JSON.parse(result) : nil
+       return person
+  
+       rescue Exception => e 
+        return 'timeout'
+      rescue
+        return 'creationfailed'
+      end   
+  end
+
   def formatted_gender
 
     if self.gender == "F" then "Female"
       elsif self.gender == "M" then "Male"
         else "Unknown"
     end
-    
+   
   end
 
   def self.create_remote(received_params)
@@ -483,32 +525,46 @@ class Person < ActiveRecord::Base
       "age"=>{
         "identifier"=>""
       } }
+
     
-    demographics_params = CGI.unescape(known_demographics.to_param).split('&').map{|elem| elem.split('=')}
+    servers = GlobalProperty.find(:first, :conditions => {:property => "remote_servers.parent"}).property_value.split(/,/) rescue nil
+    server_address_and_port = servers.to_s.split(':')
+    server_address = server_address_and_port.first
+    server_port = server_address_and_port.second
+
+    return nil if servers.blank?
+
+    # use ssh to establish a secure connection then query the localhost
+    # use wget to login (using cookies and sessions) and set the location
+    # then pull down the demographics
+    # TODO fix login/pass and location with something better
+
+    login = GlobalProperty.find(:first, :conditions => {:property => "remote_bart.username"}).property_value.split(/,/) rescue ""
+    password = GlobalProperty.find(:first, :conditions => {:property => "remote_bart.password"}).property_value.split(/,/) rescue ""
+
+    # TODO need better logic here to select the best result or merge them
+    # Currently returning the longest result - assuming that it has the most information
+    # Can't return multiple results because there will be redundant data from sites
+
+    if server_port.blank?
+      uri = "http://#{login.first}:#{password.first}@#{server_address}/patient/create_remote"                          
+    else
+      uri = "http://#{login.first}:#{password.first}@#{server_address}:#{server_port}/patient/create_remote"                          
+    end
     
-    mechanize_browser = WWW::Mechanize.new
-
-    demographic_servers = JSON.parse(GlobalProperty.find_by_property("demographic_server_ips_and_local_port").property_value) rescue []
-    
-
-    result = demographic_servers.map{|demographic_server, local_port|
-
-      begin
-
-      output = mechanize_browser.post("http://localhost:#{local_port}/patient/create_remote", demographics_params).body 
-
-      rescue Timeout::Error 
+    begin
+      output = RestClient.post(uri,known_demographics)     
+    	results = []
+    	results.push output if output and output.match(/person/)
+    	result = results.sort{|a,b|b.length <=> a.length}.first
+    	result ? person = JSON.parse(result) : nil
+       return person
+  
+       rescue Exception => e 
         return 'timeout'
       rescue
         return 'creationfailed'
-      end
-
-      output if output and output.match(/person/)
-
-    }.sort{|a,b|b.length <=> a.length}.first
-    
-
-    result ? JSON.parse(result) : nil
+      end   
   end
  
   def phone_numbers
