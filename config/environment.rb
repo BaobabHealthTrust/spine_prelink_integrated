@@ -27,6 +27,7 @@ require 'bantu_soundex'
 require 'json'
 require 'colorfy_strings'
 require 'mechanize'
+require 'rest_client'
 require 'savon'
 require 'pre_link_service'
 
