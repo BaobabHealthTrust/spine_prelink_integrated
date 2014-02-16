@@ -66,6 +66,10 @@ class PeopleController < ApplicationController
          else
 
           found_person = Person.create_from_form(found_person_data) unless found_person_data.nil?
+          #unless found_person.blank?
+          # found_person.patient.national_id_label
+          # print_and_redirect("/patients/national_id_label/?patient_id=#{found_person.patient.id}", next_task(found_person.patient))
+          #end
          end
       end
       if found_person
